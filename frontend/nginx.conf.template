@@ -1,0 +1,21 @@
+#
+# VaporMap server configuration
+#
+server {
+        listen ${VAPORMAP_URL_PORT};
+        server_name  ${VAPORMAP_URL_SERVERNAME};
+
+        root ${VAPORMAP_FRONTEND_ROOT};
+
+        index index.html index.htm;
+
+        location = /favicon.ico { access_log off; log_not_found off; }
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ =404;
+        }
+      }
+
+

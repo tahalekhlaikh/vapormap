@@ -1,0 +1,1 @@
+{ "apiUrl": "http://${VAPORMAP_BACKEND}:${VAPORMAP_BACKEND_PORT}" }

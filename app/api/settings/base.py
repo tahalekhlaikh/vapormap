@@ -1,0 +1,1 @@
+ALLOWED_CORS_ORIGINS = "*"

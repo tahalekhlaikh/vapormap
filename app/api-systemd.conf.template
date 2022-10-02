@@ -1,0 +1,21 @@
+[Unit]
+Description=Gunicorn for VaporMap
+After=network.target
+
+[Service]
+User=${VAPORMAP_USER}
+Group=${VAPORMAP_GROUP}
+WorkingDirectory=${VAPORMAP_DIR}
+Environment="PATH=${VAPORMAP_PATH}"
+Environment="PYTHONPATH=${VAPORMAP_PATH}"
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONUNBUFFERED=1
+Environment=SETTINGS_FILE="production"
+Environment=VAPOR_DBUSER=${VAPOR_DBUSER}
+Environment=VAPOR_DBPASS=${VAPOR_DBPASS}
+Environment=VAPOR_DBHOST=${VAPOR_DBHOST}
+Environment=VAPOR_DBNAME=${VAPOR_DBNAME}
+ExecStart=${VAPORMAP_PATH}/gunicorn wsgi:app --bind 0.0.0.0:${VAPORMAP_API_PORT}
+
+[Install]
+WantedBy=multi-user.target

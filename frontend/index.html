@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="/static/assets/leaflet.css" />
+<link rel="stylesheet" href="/static/assets/bootstrap.css" />
+<link rel="stylesheet" href="/static/assets/bootstrap-datepicker.min.css" />
+<script src="/static/assets/jquery.min.js"></script>
+<script src="/static/assets/bootstrap-datepicker.js"></script>
+<script src="/static/assets/bootstrap.min.js"></script>
+<script src="/static/assets/bootstrap.bundle.min.js"></script>
+<script src="/static/assets/leaflet.js"></script>
+<style>
+
+#mapid { height: 800px;}
+.ui-datepicker-div { z-index: 999; }
+
+</style>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">
+    VaporApp Map
+  </a>
+	<form class="form-inline">
+		<div class="form-group">
+			<input id='addlat' class="form-control" placeholder="Lat"/>
+      <input id='addlng' class="form-control" placeholder="Long"/>
+			<label for="addname" class="sr-only" >name</label>
+      <input id="addname" class="form-control" placeholder="What ?"/>
+      <input id="adddate"  class="form-control" placeholder="Date" data-provide="datepicker"/>
+			<a id="addpoint" class="btn btn-success">Add</a>
+		</div>
+	</form>	
+</nav>
+
+<div class="container">
+
+	
+  <div class="row">
+    <div class="col-lg">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg">
+	<div id="mapid"></div>
+    </div>
+  </div>
+  </div>
+
+<script>
+// READ Config from config.json
+// content (json)
+// apiUrl (string) : base URL for API
+
+var apiUrl; 
+
+// Block async to read config first
+$.ajaxSetup({ async: false });
+$.getJSON( "config.json", function( data ) {
+  var apiUrl = '';
+  console.log(data);
+  $.each( data, function( key, val ) {
+  	  console.log(key, val);
+	  if (key == 'apiUrl') {
+		  console.log("OK Config found for API");
+		  window.apiUrl = val;
+	  }
+  });
+});
+// End read Config 
+$.ajaxSetup({ async: true });
+
+
+console.log("API : "+apiUrl);
+$('#adddate').datepicker({
+    format: 'yyyy-mm-dd',
+});
+
+
+
+function createMarker(map) {
+	$.getJSON(apiUrl+"/geojson", function(data) {
+    L.geoJson(data, {
+		onEachFeature: function (f, l) {
+		    var deleteForm = "<a href='#' class='btn btn-danger delete-point' pointurl='"+f.properties.url+"'>DELETE</a>";
+        l.options.alt = f.properties.name
+		    markerMap.set(f.properties.url, l.bindPopup('<h1>'+f.properties.name+
+			    '</h1> <pre>'+JSON.stringify(f.properties,null,' ').replace(/[\{\}"]/g,'')+
+			    '</pre>'+deleteForm, _deleteUrl=f.properties.url));
+
+		    markerMap.get(f.properties.url).on('popupopen', function (e) {
+			    $( ".delete-point" ).click(function(popup) {
+			       var content = e.popup._content;
+			       var pointurl = $(content).filter('a').first()[0].attributes.pointurl.value;
+			       console.log(markerMap.get(pointurl));
+				$.ajax({
+					 url: pointurl,
+					 type: 'DELETE',
+					 success: function(result) {
+						map.removeLayer(markerMap.get(pointurl));
+					        clearMarker();
+						createMarker(map);
+					 }
+				});
+			    });
+			
+		    });
+		}
+
+	    }).addTo(map);
+	})
+}
+
+function clearMarker(map) {
+	markerMap.forEach(function(element) {
+		this.map.removeLayer(element);
+	})
+}
+
+var map = L.map('mapid', {
+    });
+
+ 
+var positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+        attribution: "",
+	noWrap: true
+    }).addTo(map);
+
+    map.setView([0, 0], 0);
+
+var markerMap = new Map();
+clearMarker()
+createMarker(map);
+
+
+map.on('click', function(e) {        
+        var popLocation= e.latlng;
+	console.log(popLocation);
+	$('#addlat').val(e.latlng.lat);
+	$('#addlng').val(e.latlng.lng);
+    });
+
+$( "#addpoint" ).click(function() {
+	var lat = $('#addlat').val();
+	var lng = $('#addlng').val();
+	var name = $('#addname').val();
+	var pointdate = $('#adddate').val();
+
+	$.post(apiUrl+'/api/points/',
+		{ "latitude": lat,
+		  "longitude": lng,
+		  "element_name": name,
+		  "date": pointdate })
+		.done(function( data ) {
+   			 console.log( "Done" );
+   			 console.log( data );
+			$('#addlat').removeClass('is-invalid');
+			$('#addlng').removeClass('is-invalid');
+			$('#addname').removeClass('is-invalid');
+			$('#adddate').removeClass('is-invalid');
+			clearMarker();
+			createMarker(map);
+ 			})
+		.fail(function( data ) {
+			var logs = JSON.parse(data.responseText);
+			if ("latitude" in logs) {
+				$('#addlat').addClass('is-invalid')
+				$('#addlat').tooltip('enable');
+				$('#addlat').tooltip({'title': logs.latitude});
+				$('#addlat').tooltip('show');
+			}
+			if ("longitude" in logs) {
+				$('#addlng').addClass('is-invalid')
+			}
+			if ("element_name" in logs) {
+				$('#addname').addClass('is-invalid')
+			}
+			if ("date" in logs) {
+				$('#adddate').addClass('is-invalid')
+			}
+   			 console.log( "Failed" );
+   			 console.log( logs.latitude );
+			})
+	
+});
+</script>
+
+
+</body>
+</html>
