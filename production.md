@@ -285,7 +285,7 @@ exit
 
 Ajout de l'utilisateur app-vapormap au groupe www-data
 ``` bash
-sudo usermod -a -G app-vapormap www-data
+sudo usermod -a -G www-data app-vapormap 
 ```
 
 Mise en place du fichier de configuration
