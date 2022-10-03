@@ -30,9 +30,9 @@ L'application "VaporMap" est constituée de 2 parties :
 
 L'utilisateur final de l'application interragit avec le frontend.
 
-**Le frontend ** est composé de fichiers statiques. Il execute du code javascript dans le navigateur de l'utilisateur, et effectue des requètes vers l'API. Il permet à l'utilisateur d'ajouter des points de relevés, et d'afficher les points saisis sur une carte.
+**Le frontend** est composé de fichiers statiques. Il execute du code javascript dans le navigateur de l'utilisateur, et effectue des requètes vers l'API. Il permet à l'utilisateur d'ajouter des points de relevés, et d'afficher les points saisis sur une carte.
 
-**L'API **est interrogée par le navigateur de lutilisateur. Elle peut également être utilisée sans le frontend.
+**L'API** est interrogée par le navigateur de lutilisateur. Elle peut également être utilisée sans le frontend.
 Elle est développée avec le framework Python Flask, un micro framework open-source de développement web en Python. 
 
 Flask permet de définir des "routes", et d'y associer un traitement en python. Pour l'application Vapormap : 
@@ -45,10 +45,10 @@ Flask permet de définir des "routes", et d'y associer un traitement en python. 
 
 ## Déploiement
 
-Pour l'API, Flask permet de déployer les applications dans différents mode. 2 modes sont définis par défaut: d2veloppement et production.
+Pour l'API, Flask permet de déployer les applications dans différents mode. 2 modes sont définis par défaut: développement et production.
 
 En développement, l'application utilise serveur http intégré à Flask, et stocke ses données dans une base sqlite.
-En production l'application utilise un serveur web externe (Nginx), et stocke ses données dans une base MariaDB.
+En production l'application utilise un serveur web externe (Nginx), et stocke ses données dans une base de données externes (MariaDB).
 
 Des environnements d'execution Python permettant de lancer l'application, mais indépendants du système hôte, sont mis en place avec l'outil "virtualenv".
 
