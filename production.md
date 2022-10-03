@@ -103,7 +103,7 @@ id
 * Récupération du dépot
 ``` bash
 cd $HOME
-git clone https://gitlab.com/vapormap/vapormap-flask.git vapormap-prod
+git clone https://gitlab.imt-atlantique.fr/vapormap/vapormap-app.git vapormap-prod
 ```
 * Création d'un environnement Python virtuel et activation
 ``` bash

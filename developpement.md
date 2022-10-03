@@ -54,7 +54,7 @@ python3 -m venv -h
 ### Récupération du projet
 ```
 cd $HOME
-git clone https://gitlab.com/vapormap/vapormap-flask.git vapormap-dev
+git clone https://gitlab.imt-atlantique.fr/vapormap/vapormap-app.git vapormap-dev
 cd vapormap-dev
 ```
 
