@@ -126,7 +126,8 @@ source venv/bin/activate
 * Configurer l'accès à l'API
 ``` bash
 cd $HOME/vapormap-dev/frontend/
-export VAPORMAP_BACKEND=<PUBLIC_API_ENDPOINT_HOST>
+# l'API en mode developpement s'exectu
+export VAPORMAP_BACKEND=localhost
 export VAPORMAP_BACKEND_PORT=5000
 envsubst '${VAPORMAP_BACKEND},${VAPORMAP_BACKEND_PORT}' < config.json.template > config.json
 ```
