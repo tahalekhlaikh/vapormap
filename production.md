@@ -190,10 +190,9 @@ curl http://localhost:5000/api/points/?format=json
   [INFO] Shutting down: Master
 ```
 
-Une fois l'application installé, initialisée,  et testée, revenir à l'utilisateur initial.
+Une fois l'application installé, initialisée,  et testée sortir de l'environnement python :
 ``` bash
 deactivate
-exit
 ```
 
 
